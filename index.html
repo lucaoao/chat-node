@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat em Node.JS</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+    <div id="historico">
+        <form id="chat">
+            <input type="text" id="corpoMensagem" name="corpoMensagem" />
+            <input type="submit" value="Enviar mensagem" />
+        </form>
+    </div>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        let socket = io.connect();
+
+        $("form#chat").submit(function(e) {
+            e.preventDefault();
+            socket.emit("enviar mensagem", $(this).find("#corpoMensagem").val(), function() {
+                $("form#chat #corpoMensagem").val("")
+            });
+        });
+        socket.on("atualizar mensagens", function(mensagem) {
+            let mensagemFormatada = $(<p />).text(mensagem);
+            $("#historico").append(mensagemFormatada);
+        })
+    </script>
+</body>
+</html>
